@@ -1,7 +1,7 @@
 from flask import Flask
-from app.config import Config
-from app.routes import api
-from app.auth import oauth
+from config import Config
+from routes import api
+from auth import oauth
 
 
 def create_app():

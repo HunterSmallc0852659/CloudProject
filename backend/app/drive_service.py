@@ -1,7 +1,7 @@
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 from flask import session
-from app.models import save_file_metadata
+from models import save_file_metadata
 import os
 
 

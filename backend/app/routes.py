@@ -1,7 +1,7 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request
 from flask_restful import Api, Resource
-from app.drive_service import upload_file_to_drive
-from app.models import get_files
+
+from drive_service import upload_file_to_drive
 
 routes_bp = Blueprint("routes", __name__)
 api = Api(routes_bp)

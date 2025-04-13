@@ -2,7 +2,7 @@ from flask import Flask
 from config import Config
 from routes import api
 from auth import oauth
-
+from .models import MyModel
 
 def create_app():
     app = Flask(__name__)

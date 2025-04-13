@@ -1,8 +1,21 @@
 from flask_pymongo import PyMongo
-from app import create_app
+from pymongo import MongoClient
+from .__init__ import create_app
+
+
+client = MongoClient('mongodb://localhost:27017/')
+db = client['CloudProjectDB']
+collection = db['CloudProjectCollection']
 
 app = create_app()
 mongo = PyMongo(app)
+
+class MyModel(object):
+    def __init__(self, data):
+        self.data = data
+
+    def save(self):
+        collection.insert_one(self.data)
 
 def save_file_metadata(file_metadata):
     """ Save metadata to MongoDB """

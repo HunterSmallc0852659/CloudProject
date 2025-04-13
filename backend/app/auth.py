@@ -1,9 +1,9 @@
-from flask import Blueprint, redirect, request, session, url_for
+import flask
 from authlib.integrations.flask_client import OAuth
 import os
 
 oauth = OAuth()
-auth_bp = Blueprint("auth", __name__)
+auth_bp = flask.Blueprint("auth", __name__)
 
 google = oauth.register(
     name="google",
@@ -16,10 +16,10 @@ google = oauth.register(
 
 @auth_bp.route("/login")
 def login():
-    return google.authorize_redirect(url_for("auth.auth_callback", _external=True))
+    return google.authorize_redirect(flask.url_for("auth.auth_callback", _external=True))
 
 @auth_bp.route("/callback")
 def auth_callback():
     token = google.authorize_access_token()
-    session["token"] = token
-    return redirect(url_for("routes.upload_file"))
+    flask.session["token"] = token
+    return flask.redirect(flask.url_for("routes.upload_file"))

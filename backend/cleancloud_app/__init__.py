@@ -15,4 +15,8 @@ def create_app():
     app.register_blueprint(routes_bp, url_prefix="/api")  # ✅ CORRECT
     app.register_blueprint(auth_bp, url_prefix="/auth")
 
+    # Optional: Configurations and route registration
+    from .routes import register_routes
+    register_routes(app)
+
     return app

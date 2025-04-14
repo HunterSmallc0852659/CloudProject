@@ -17,10 +17,6 @@ class MyModel(object):
     def save(self):
         collection.insert_one(self.data)
 
-def save_file_metadata(file_metadata):
-    """ Save metadata to MongoDB """
-    mongo.db.files.insert_one(file_metadata)
-
 def get_files():
     """ Retrieve all stored metadata """
     return list(mongo.db.files.find({}, {"_id": 0}))

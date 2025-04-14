@@ -1,12 +1,13 @@
 from flask import Blueprint, request
 from flask_restful import Api, Resource
+from .drive_service import upload_file_to_drive
 
-from drive_service import upload_file_to_drive
-
+# Create a blueprint
 routes_bp = Blueprint("routes", __name__)
+# Attach Flask-RESTful API to the blueprint
 api = Api(routes_bp)
 
-
+# Define a Resource
 class UploadFile(Resource):
     def post(self):
         """ Handle file upload request """
@@ -23,5 +24,5 @@ class UploadFile(Resource):
         except Exception as e:
             return {"error": str(e)}, 500
 
-
+# Register the resource with the API
 api.add_resource(UploadFile, "/upload")

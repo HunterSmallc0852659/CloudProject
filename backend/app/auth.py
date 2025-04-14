@@ -1,9 +1,12 @@
-import flask
-from authlib.integrations.flask_client import OAuth
 import os
 
+import flask
+from flask import Blueprint
+from authlib.integrations.flask_client import OAuth
+
+auth_bp = Blueprint("auth", __name__)
+
 oauth = OAuth()
-auth_bp = flask.Blueprint("auth", __name__)
 
 google = oauth.register(
     name="google",

@@ -51,3 +51,14 @@ def upload():
 
 # Register the resource with the API
 api.add_resource(UploadFile, "/upload")
+
+from .models import get_files  # make sure this import is placed at the top if not already
+
+@routes_bp.route("/files", methods=["GET"])
+def list_files():
+    try:
+        files = get_files()
+        return jsonify(files)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+

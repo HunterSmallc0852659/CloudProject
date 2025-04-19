@@ -1,0 +1,74 @@
+body {
+    padding: 2rem;
+    background-color: #f5f7fa;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+}
+
+h1 {
+    color: #2b3e50;
+    font-size: 2.2rem;
+}
+
+h2 {
+    color: #3d5a80;
+    font-size: 1.5rem;
+    margin-top: 2rem;
+}
+
+section {
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+input[type="file"] {
+    margin-bottom: 1rem;
+}
+
+#uploadResult {
+    margin-top: 1rem;
+    font-weight: bold;
+    color: #2b9348; /* green for success */
+}
+
+#uploadResult.error {
+    color: #d00000; /* red for error */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #e0e1e2;
+    font-weight: bold;
+}
+
+a.button.primary {
+    background-color: #0077cc;
+    color: white;
+}
+
+a.button.primary:hover {
+    background-color: #005fa3;
+}
+
+a[target="_blank"] {
+    color: #0077cc;
+    text-decoration: none;
+}
+
+a[target="_blank"]:hover {
+    text-decoration: underline;
+}

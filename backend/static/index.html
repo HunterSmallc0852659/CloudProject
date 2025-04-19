@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Google Drive Integration App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/3.0.1/mini-default.min.css">
+    <style>
+        body {
+            padding: 2rem;
+        }
+
+        h1, h2 {
+            margin-bottom: 1rem;
+        }
+
+        table {
+            width: 100%;
+        }
+
+        #uploadResult {
+            margin-top: 1rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Google Drive Integration App</h1>
+
+    <!-- Section: Google Login -->
+    <section>
+        <a class="button primary" href="/auth/login">Login with Google</a>
+    </section>
+
+    <!-- Section: File Upload -->
+    <section>
+        <h2>Upload a File</h2>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" name="file" id="fileInput" required>
+            <input type="submit" value="Upload File" class="primary">
+        </form>
+        <div id="uploadResult"></div>
+    </section>
+
+    <!-- Section: File List -->
+    <section>
+        <h2>Uploaded Files</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>File Name</th>
+                    <th>MIME Type</th>
+                    <th>Upload Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="fileTableBody">
+                <!-- Dynamic rows inserted here -->
+            </tbody>
+        </table>
+    </section>
+
+    <!-- JS Script -->
+    <script>
+        // Load existing file metadata from /api/files
+        async function loadFiles() {
+            try {
+                const res = await fetch('/api/files');
+                const files = await res.json();
+
+                const tbody = document.getElementById('fileTableBody');
+                tbody.innerHTML = '';
+
+                files.forEach(file => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${file.file_name}</td>
+                        <td>${file.mime_type}</td>
+                        <td>${new Date(file.upload_date).toLocaleString()}</td>
+                        <td><a href="https://drive.google.com/file/d/${file.file_id}/view" target="_blank">View</a></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (err) {
+                console.error('Failed to load files:', err);
+                document.getElementById('fileTableBody').innerHTML = `
+                    <tr><td colspan="4">Error fetching file list.</td></tr>
+                `;
+            }
+        }
+
+        // Upload a file to /api/upload
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const fileInput = document.getElementById('fileInput');
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+
+            try {
+                const res = await fetch('/api/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await res.json();
+                document.getElementById('uploadResult').textContent = result.message || result.error;
+
+                if (res.ok) {
+                    fileInput.value = '';
+                    loadFiles();
+                }
+            } catch (err) {
+                console.error('Upload failed:', err);
+                document.getElementById('uploadResult').textContent = 'Upload failed. Please try again.';
+            }
+        });
+
+        window.onload = loadFiles;
+    </script>
+
+</body>
+</html>

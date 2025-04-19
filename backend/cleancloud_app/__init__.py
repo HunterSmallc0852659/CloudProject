@@ -1,22 +1,32 @@
 from flask import Flask
 from .config import Config
-from .auth import auth_bp
+from .auth import auth_bp, oauth
+from flask_pymongo import PyMongo
 
-from .routes import routes_bp  # This is the blueprint that includes the Api + Resource
+# Initialize PyMongo here, no need to use MongoClient separately
+mongo = PyMongo()
+
 
 def create_app():
     app = Flask(__name__)
+
+    # Load configurations from Config class
     app.config.from_object(Config)
 
-    from .auth import oauth
+    # Initialize OAuth
     oauth.init_app(app)
 
-    # Register blueprints
-    app.register_blueprint(routes_bp, url_prefix="/api")  # ✅ CORRECT
-    app.register_blueprint(auth_bp, url_prefix="/auth")
+    # Set Mongo URI for MongoDB
+    app.config["MONGO_URI"] = "mongodb://localhost:27017/CloudProjectDB"
 
-    # Optional: Configurations and route registration
+    # Initialize MongoDB extension
+    mongo.init_app(app)
+
+    # Import routes and register them here to avoid circular imports
     from .routes import register_routes
     register_routes(app)
+
+    # Register auth blueprint
+    app.register_blueprint(auth_bp, url_prefix="/auth")
 
     return app

@@ -1,15 +1,23 @@
+# routes.py
+
 from flask import Blueprint, request, jsonify
 from flask_restful import Api, Resource
 from .drive_service import upload_file_to_drive
 from .auth import get_drive_service
+from .models import get_files  # Import it here
 import os
 
-# Create a blueprint
 routes_bp = Blueprint("routes", __name__)
-# Attach Flask-RESTful API to the blueprint
 api = Api(routes_bp)
 
-# Define a Resource
+@routes_bp.route("/files", methods=["GET"])
+def get_files_route():
+    try:
+        files = get_files()  # Call the function from models.py
+        return jsonify(files)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 class UploadFile(Resource):
     def post(self):
         """ Handle file upload request """
@@ -35,30 +43,6 @@ def register_routes(app):
     def ping():
         return jsonify({'message': 'pong'})
 
-upload_bp = Blueprint('upload', __name__)
-
-@upload_bp.route('/upload', methods=['POST'])
-def upload():
-    file = request.files['file']
-    drive_service = get_drive_service()
-    metadata = upload_file_to_drive(
-        drive_service=drive_service,
-        file_path=file,
-        file_name=file.filename,
-        mime_type=file.mimetype
-    )
-    return jsonify(metadata)
-
-# Register the resource with the API
-api.add_resource(UploadFile, "/upload")
-
-from .models import get_files  # make sure this import is placed at the top if not already
-
-@routes_bp.route("/files", methods=["GET"])
-def list_files():
-    try:
-        files = get_files()
-        return jsonify(files)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
+    # Register the resource with the API
+    api.add_resource(UploadFile, "/upload")
+    app.register_blueprint(routes_bp, url_prefix="/api")
